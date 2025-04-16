@@ -1,0 +1,19 @@
+DateTime.GetCurrentDateTime.Local DateTimeFormat: DateTime.DateTimeFormat.DateAndTime CurrentDateTime=> CurrentDateTime
+SET excelNazev TO $'''vyscofan.xlsx'''
+SET cestaSlozky TO $'''C:\\Users\\petrrozkosny\\Desktop\\vyscofan\\'''
+IF (Folder.IfFolderExists.DoesNotExist Path: cestaSlozky) THEN
+    Folder.Create FolderPath: $'''C:\\Users\\petrrozkosny\\Desktop''' FolderName: $'''vyscofan'''
+END
+LABEL excelExistuje
+Excel.LaunchExcel.LaunchAndOpenUnderExistingProcess Path: $'''%cestaSlozky%%excelNazev%''' Visible: True ReadOnly: False Instance=> ExcelInstance
+ON ERROR
+    GOTO excelNeexistuje
+END
+Excel.GetFirstFreeColumnRow Instance: ExcelInstance FirstFreeColumn=> FirstFreeColumn FirstFreeRow=> FirstFreeRow
+Excel.WriteToExcel.WriteCell Instance: ExcelInstance Value: CurrentDateTime Column: 1 Row: FirstFreeRow
+Excel.CloseExcel.CloseAndSave Instance: ExcelInstance
+EXIT Code: 0
+LABEL excelNeexistuje
+Excel.LaunchExcel.LaunchUnderExistingProcess Visible: True Instance=> ExcelInstance
+Excel.WriteToExcel.WriteCell Instance: ExcelInstance Value: CurrentDateTime Column: 1 Row: 1
+Excel.CloseExcel.CloseAndSaveAs Instance: ExcelInstance DocumentFormat: Excel.ExcelFormat.FromExtension DocumentPath: $'''%cestaSlozky%%excelNazev%'''
