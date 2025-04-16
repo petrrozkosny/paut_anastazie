@@ -1,0 +1,27 @@
+LABEL zacatek
+@@statistics_Input_Text: '1'
+@@statistics_Action_Submit: '1'
+Display.ShowCustomDialog CardTemplateJson: '''{
+  \"type\": \"AdaptiveCard\",
+  \"version\": \"1.4\",
+  \"id\": \"AdaptiveCard\",
+  \"body\": [
+    {
+      \"type\": \"Input.Text\",
+      \"id\": \"Text input\"
+    }
+  ],
+  \"actions\": [
+    {
+      \"type\": \"Action.Submit\",
+      \"id\": \"Submit\",
+      \"title\": \"Ok\"
+    }
+  ]
+}''' CustomFormData=> CustomFormData ButtonPressed=> ButtonPressed
+SET koncovka TO CustomFormData['Text input']
+Folder.GetFiles Folder: $'''C:\\Users\\petrrozkosny\\Downloads\\paut_data\\paut_data''' FileFilter: $'''*%koncovka%''' IncludeSubfolders: False FailOnAccessDenied: True SortBy1: Folder.SortBy.NoSort SortDescending1: False SortBy2: Folder.SortBy.NoSort SortDescending2: False SortBy3: Folder.SortBy.NoSort SortDescending3: False Files=> Files
+Display.ShowMessageDialog.ShowMessage Message: $'''Počet nalezených souborů %Files.Count%''' Icon: Display.Icon.None Buttons: Display.Buttons.RetryCancel DefaultButton: Display.DefaultButton.Button1 IsTopMost: False ButtonPressed=> ButtonPressed2
+IF ButtonPressed2 = $'''Retry''' THEN
+    GOTO zacatek
+END
